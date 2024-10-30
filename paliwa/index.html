@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyszukiwarka</title>
+    <link rel="stylesheet" href="styl.css">
+    <script>
+          function searchStations() {
+        const station = document.getElementById('station').value;
+        const city = document.getElementById('city').value;
+        const minPrice = document.getElementById('min-price').value;
+        const maxPrice = document.getElementById('max-price').value;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `search.php?station=${station}&city=${city}&min_price=${minPrice}&max_price=${maxPrice}`, true);
+        xhr.onload = function() {
+            // if (this.status === 200) {
+                document.getElementById('results').innerHTML = this.responseText;
+            // }
+        };
+        xhr.send();
+    }
+
+    function resetForm() {
+        document.getElementById('station').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('min-price').value = '1.00';
+        document.getElementById('max-price').value = '9.99';
+
+        document.getElementById('results').innerHTML = 'Tutaj mają wyświetlać się wyniki wyszukiwania';
+    }
+
+    function updatePriceDisplay() {
+    const minPriceSlider = document.getElementById("min-price");
+    const maxPriceSlider = document.getElementById("max-price");
+    const minPriceDisplay = document.getElementById("min-price-display");
+    const maxPriceDisplay = document.getElementById("max-price-display");
+    minPriceDisplay.textContent = parseFloat(minPriceSlider.value).toFixed(2);
+    maxPriceDisplay.textContent = parseFloat(maxPriceSlider.value).toFixed(2);
+}
+  
+    </script>
+</head>
+<body onload="updatePriceDisplay()">
+    <div class="container">
+        <div class="sidebar">
+            <img src="zdj.png" alt="Logo">
+            <label for="station">Nazwa stacji</label>
+            <input type="text" id="station" placeholder="Wpisz nazwę stacji">
+
+            <label for="city">Miasto</label>
+            <select id="city">
+                <option value="">Wybierz miasto</option>
+                <option value="Warszawa">Warszawa</option>
+                <option value="Kraków">Kraków</option>
+                <option value="Gdańsk">Gdańsk</option>
+                <option value="Wrocław">Wrocław</option>
+                <option value="Poznań">Poznań</option>
+            </select>
+
+            <label for="min-price">Cena za litr od: <span id="min-price-display"></span> zł</label>
+            <input type="range" id="min-price" min="1.00" max="9.99" step="0.01" value="1.00" oninput="updatePriceDisplay()">
+
+            <label for="max-price">Cena za litr do: <span id="max-price-display"></span> zł</label>
+            <input type="range" id="max-price" min="1.00" max="9.99" step="0.01" value="9.99" oninput="updatePriceDisplay()">
+  
+            <button type="button" onclick="searchStations()">Szukaj</button>
+            <button type="button" class="reset" onclick="resetForm()">Reset</button>
+        </div>
+        <div class="main-content">
+            <div id="results">Tutaj mają wyświetlać się wyniki wyszukiwania</div>
+        </div>
+    </div>
+</body>
+
+</html>
